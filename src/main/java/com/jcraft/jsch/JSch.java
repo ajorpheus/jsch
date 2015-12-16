@@ -29,6 +29,8 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package com.jcraft.jsch;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
 
@@ -202,6 +204,16 @@ public class JSch{
     catch(Exception e){
     }
     */
+
+    File f = new File(Util.checkTilde("~/.ssh/config"));
+    if (f.exists()) {
+      try {
+        ConfigRepository configRepository = OpenSSHConfig.parseFile(f.getAbsolutePath());
+          this.setConfigRepository(configRepository);
+      } catch (IOException e) {
+        throw new RuntimeException("Can't use openssh config " + f.getPath(), e);
+      }
+    }
   }
 
   /**
